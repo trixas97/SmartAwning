@@ -29,7 +29,6 @@ String response = "";
 
 ESP8266WebServer server(port);
 HTTPClient http;
-//WiFiClient client;
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", utcOffsetInSeconds);
 Servo servo;
@@ -83,7 +82,6 @@ void setup() {
   
   pinMode(waterPin, OUTPUT);
   pinMode(photoPin, OUTPUT);
-//  digitalWrite(waterPin, HIGH);
 
   countClock = 0;
   countLight = 0;
@@ -108,9 +106,6 @@ void loop() {
   if(countClock == 20){
     myRTC.updateTime();
     controlProgramTime();
-    // Serial.println("Real Time: " + String(myRTC.hours) + ":" + String(myRTC.minutes) + ":" + String(myRTC.seconds));
-    // Serial.println("Temperature: " + String(temperature) + "C");
-    // Serial.println("Humidity: " + String(humidity) + "%");
 //    statePrint(); 
     countClock = 0;
   }
@@ -266,7 +261,6 @@ void api(){
   server.on("/detect", []() {
     if(server.args() > 0){
       if((server.argName(0) == "smart") && (server.arg(0) == "awning")){
-        // Serial.println(server.client().remoteIP().toString() + " connected");
         response =  "{ ";
         response += "\"name\": \"" + device_name + "\", ";
         response += "\"ip\": \"" + String(WiFi.localIP().toString()) + "\", ";
@@ -292,8 +286,6 @@ void api(){
     response += "\"awning_state\": " + String(tendaState) + ", ";
     sprintf(timevar, "%02d:%02d",dh,dm);
     response += "\"program_open\": \"" + String(timevar) + "\", ";
-//    response += "\"program_open\": \"" + String(dh) + ":" + String(dm) + "\", ";
-//  response += "\"program_close\": \"" + String(nh) + ":" + String(nm) + "\", ";
     sprintf(timevar, "%02d:%02d",nh,nm);
     response += "\"program_close\": \"" + String(timevar) + "\", ";
     response += "\"awning_value\": " + String((100 * tendaValue) / servoMax);
@@ -423,9 +415,12 @@ void api(){
 
 
 // void statePrint(){
+//   Serial.println("Real Time: " + String(myRTC.hours) + ":" + String(myRTC.minutes) + ":" + String(myRTC.seconds));
 //   Serial.println("Program Time (Open): " + String(dh) + ":" + String(dm));
 //   Serial.println("Program Time (Close): " + String(nh) + ":" + String(nm));
 //   Serial.println("Program Control (now): " + String(programOpen));
+//   Serial.println("Temperature: " + String(temperature) + "C");
+//   Serial.println("Humidity: " + String(humidity) + "%");
 //   Serial.println("Tenda State: " + String(tendaState));
 //   Serial.println("Tenda Value: " + String(tendaValue));
 //   Serial.println("Water Enable: " + String(waterEnable));
