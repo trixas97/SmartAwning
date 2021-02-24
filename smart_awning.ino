@@ -1,4 +1,5 @@
 #include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
 #include <ESP8266WebServer.h>
 #include <WiFiUdp.h>
 #include <NTPClient.h>
@@ -14,16 +15,23 @@ const int dhtPin = 13;
 
 
 
-const char* ssid     = "Trixas-Lan";
-const char* password = "mpempeni2010";
+//const char* ssid     = "Trixas-Lan";
+//const char* password = "mpempeni2010";
+const char* ssid     = "CYTAB82A";
+const char* password = "ZTETG8FH3B02441";
 const String device_name = "NodeMCU_Tenda";
 const int port = 80;
-const String publicIp = "46.176.166.222:300";
+const int publicPort = 300;
+const String publicIPApi = "http://api.ipify.org/?format=text";
+String publicIp = "-";
+
 
 const long utcOffsetInSeconds = 7200;
 String response = "";
 
 ESP8266WebServer server(port);
+HTTPClient http;
+//WiFiClient client;
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", utcOffsetInSeconds);
 Servo servo;
@@ -95,6 +103,7 @@ void setup() {
     humidity = dht.readHumidity();
   }
   Serial.println("Temperature: " + String(temperature) + "C");
+  Serial.println("Humidity: " + String(humidity) + "%");
 }
 
 void loop() { 
@@ -151,6 +160,13 @@ void initWifi(){
   Serial.println(" ");
   Serial.println("Connected to: " + String(ssid));
   Serial.println("IP address is: " + WiFi.localIP().toString());
+  http.begin(publicIPApi.c_str());
+  int httpResponseCode = http.GET();
+  if (httpResponseCode>0) {
+    publicIp = http.getString();
+    Serial.println("Public Ip: " + publicIp + ":" + String(publicPort));
+  }
+  http.end();
 }
 
 //Init Server to listen requests
@@ -257,6 +273,7 @@ void api(){
         response += "\"name\": \"" + device_name + "\", ";
         response += "\"ip\": \"" + String(WiFi.localIP().toString()) + "\", ";
         response += "\"public_ip\": \"" + publicIp + "\", ";
+        response += "\"public_port\": \"" + String(publicPort) + "\", ";
         response += "\"mac\": \"" + String(WiFi.macAddress()) + "\"";
         response += " }";
       }
