@@ -15,10 +15,8 @@ const int dhtPin = 13;
 
 
 
-//const char* ssid     = "Trixas-Lan";
-//const char* password = "mpempeni2010";
-const char* ssid     = "CYTAB82A";
-const char* password = "ZTETG8FH3B02441";
+const char* ssid     = "WIFI NAME";
+const char* password = "WIFI PASSWORD";
 const String device_name = "NodeMCU_Tenda";
 const int port = 80;
 const int publicPort = 300;
