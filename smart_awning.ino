@@ -87,8 +87,7 @@ void setup() {
   countLight = 0;
   countWater = 0;
 
-  
-  
+    
   delay(2000);
   temperature = dht.readTemperature();
   delay(500);
